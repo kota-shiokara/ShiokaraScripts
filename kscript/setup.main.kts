@@ -1,11 +1,30 @@
 #!/usr/bin/env kotlin
+import java.io.File
 
-// TODO: テンプレートをコピーして実行権限をつけるファイルを作成する
-fun main() {
-    if (args.size != 1) return
+val templateFile = File("./template.main.kts")
 
-    println("Hello, ${args.first()}!")
+fun main(args: Array<String>) {
+    if (args.size != 1) {
+        println("Usage: ./setup.main.kts <file-name>")
+        return
+    }
+
+    try {
+        val newFileName = "${args[0]}.main.kts"
+        val newFile = File(newFileName)
+        if (newFile.exists()) {
+            println("File already exists: ${newFile.absolutePath}")
+            return
+        }
+
+        templateFile.copyTo(newFile)
+        newFile.setExecutable(true)
+
+        println("File created: ${newFile.absolutePath}")
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return
+    }
 }
 
-
-main()
+main(args)
